@@ -1,6 +1,6 @@
 # AI Playground
 
-A Spring Boot project for learning to build AI agents using the Claude API by Anthropic.
+A Spring Boot project for learning to build AI agents using Claude (Anthropic) and ChatGPT (OpenAI).
 
 ---
 
@@ -45,7 +45,7 @@ cd ai-playground
 ### Option 1 — Using IntelliJ IDEA
 
 1. Open the project in IntelliJ
-2. Set your API key as a runtime environment variable (see below)
+2. Set your API keys as runtime environment variables (see below)
 3. Click the **Run** button or press `Shift + F10`
 4. The server starts at `http://localhost:8080`
 
@@ -63,7 +63,7 @@ To build the project without running:
 
 ---
 
-## Generating Your Anthropic API Key
+## Generating Your Anthropic API Key (Claude)
 
 1. Go to [console.anthropic.com](https://console.anthropic.com)
 2. Sign in or create a free account
@@ -76,9 +76,22 @@ To build the project without running:
 
 ---
 
-## Setting Your API Key
+## Generating Your OpenAI API Key (ChatGPT)
 
-This project reads the API key from a runtime environment variable so the actual key is never stored in the codebase.
+1. Go to [platform.openai.com](https://platform.openai.com)
+2. Sign in or create a free account
+3. Navigate to **Settings → API Keys**
+4. Click **Create new secret key**
+5. Give it a name (e.g. `ai-playground`)
+6. Copy the key immediately — it is only shown once
+
+> Note: The OpenAI API requires credits to use. New accounts can add a payment method at [platform.openai.com/settings/billing](https://platform.openai.com/settings/billing). New accounts start on Tier 0 which has rate limits — adding credits upgrades your tier automatically.
+
+---
+
+## Setting Your API Keys
+
+This project reads API keys from runtime environment variables so actual values are never stored in the codebase.
 
 ### In IntelliJ IDEA
 
@@ -89,6 +102,7 @@ This project reads the API key from a runtime environment variable so the actual
 
 ```
 ANTHROPIC_API_KEY=sk-ant-your-actual-key-here
+OPENAI_API_KEY=sk-proj-your-actual-key-here
 ```
 
 5. Click **Apply** and **OK**
@@ -99,6 +113,7 @@ Add this to your `~/.zshrc` or `~/.bashrc`:
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-your-actual-key-here
+export OPENAI_API_KEY=sk-proj-your-actual-key-here
 ```
 
 Then reload:
@@ -111,20 +126,27 @@ source ~/.zshrc
 
 1. Open **System Properties → Environment Variables**
 2. Under **User variables**, click **New**
-3. Variable name: `ANTHROPIC_API_KEY`
-4. Variable value: `sk-ant-your-actual-key-here`
+3. Add both variables:
+
+| Variable name | Variable value |
+|---|---|
+| `ANTHROPIC_API_KEY` | `sk-ant-your-actual-key-here` |
+| `OPENAI_API_KEY` | `sk-proj-your-actual-key-here` |
 
 ---
 
-## How the API Key is Used
+## How the API Keys are Used
 
-In `application.properties`, the key is referenced as an environment variable — no actual value is stored:
+In `application.properties`, keys are referenced as environment variables — no actual values are stored:
 
 ```properties
 ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+OPENAI_API_KEY=${OPENAI_API_KEY}
+openai.api-key=${OPENAI_API_KEY}
+openai.base-url=https://api.openai.com/v1
 ```
 
-In the Java code, it is injected via Spring's `@Value` annotation:
+Anthropic key is injected via Spring's `@Value` annotation:
 
 ```java
 @Component
@@ -152,6 +174,66 @@ public class AnthropicAIClientBuilder {
 }
 ```
 
+OpenAI key is auto-configured by the Spring Boot starter — no manual wiring needed:
+
+```java
+@Component
+public class OpenAIClientBuilder {
+
+    private final OpenAIClient openAIClient;
+
+    public OpenAIClientBuilder(OpenAIClient openAIClient) {
+        this.openAIClient = openAIClient;
+    }
+
+    public String askOpenAIModel(String message) {
+        ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
+                .model(ChatModel.GPT_4_O_MINI)
+                .addUserMessage(message)
+                .maxCompletionTokens(1024)
+                .build();
+
+        ChatCompletion completion = openAIClient.chat()
+                .completions()
+                .create(params);
+
+        return completion.choices()
+                .get(0)
+                .message()
+                .content()
+                .orElse("No response");
+    }
+}
+```
+
+---
+
+## Switching Between Models
+
+The project supports switching between Claude and ChatGPT via the UI or API.
+
+### Via the UI
+
+Select the model from the dropdown in the top right of the chat interface.
+
+### Via API
+
+Pass the `withModel` request parameter:
+
+```bash
+# Use Claude
+curl -X POST "http://localhost:8080/api/v1/1.0/ai-model-interaction?withModel=claude" \
+  -H "Content-Type: text/plain" \
+  -d "Hello!"
+
+# Use ChatGPT
+curl -X POST "http://localhost:8080/api/v1/1.0/ai-model-interaction?withModel=openai" \
+  -H "Content-Type: text/plain" \
+  -d "Hello!"
+```
+
+> If no model is specified, Claude is used by default.
+
 ---
 
 ## Testing the API
@@ -162,15 +244,7 @@ Once the server is running, open your browser and go to:
 http://localhost:8080
 ```
 
-You will see the AI Playground chat UI where you can start sending messages to Claude directly.
-
-You can also test via curl:
-
-```bash
-curl -X POST http://localhost:8080/api/claude/ask \
-  -H "Content-Type: text/plain" \
-  -d "Hello Claude!"
-```
+You will see the AI Playground chat UI where you can select a model and start chatting.
 
 ---
 
@@ -179,8 +253,9 @@ curl -X POST http://localhost:8080/api/claude/ask \
 - Java 17
 - Spring Boot 4.0.5
 - Gradle
-- Anthropic Java SDK
-- Claude Sonnet 4.6
+- Anthropic Java SDK — Claude Sonnet 4.6
+- OpenAI Java SDK — GPT-4o Mini
+- Vanilla HTML, CSS, JavaScript
 
 ---
 
