@@ -188,7 +188,7 @@ public class OpenAIClientBuilder {
 
     public String askOpenAIModel(String message) {
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
-                .model(ChatModel.GPT_4_O_MINI)
+                .model(ChatModel.GPT_4O)
                 .addUserMessage(message)
                 .maxCompletionTokens(1024)
                 .build();
