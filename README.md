@@ -174,7 +174,7 @@ public class AnthropicAIClientBuilder {
 }
 ```
 
-OpenAI key is auto-configured by the Spring Boot starter — no manual wiring needed:
+OpenAI key is also injected via Spring's `@Value` annotation:
 
 ```java
 @Component
