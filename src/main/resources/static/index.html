@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI Playground — Claude</title>
+  <title>AI Playground</title>
   <link rel="stylesheet" href="/css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
@@ -16,7 +16,10 @@
     </svg>
   </div>
   <h1>AI Playground</h1>
-  <span class="model-badge">claude-sonnet-4-6</span>
+  <select id="modelSelect" onchange="updateModelBadge(this.value)">
+    <option value="claude">Claude Sonnet 4.6</option>
+    <option value="openai">OpenAI GPT-4o</option>
+  </select>
 </header>
 
 <div class="chat-container" id="chatContainer">
@@ -37,7 +40,8 @@
 
 <div class="input-area">
   <div class="input-wrapper">
-    <textarea id="messageInput" placeholder="Message Claude..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <textarea id="messageInput" placeholder="Message AI..." rows="1"
+              onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
     <button class="send-btn" id="sendBtn" onclick="sendMessage()">
       <svg viewBox="0 0 24 24" fill="none">
         <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

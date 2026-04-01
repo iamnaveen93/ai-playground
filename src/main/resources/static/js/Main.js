@@ -1,4 +1,4 @@
-const API_URL = '/api/v1/1.0/ai-model-interaction/ask-claude';
+const API_URL = '/api/v1/1.0/ai-model-interaction';
 const chatContainer = document.getElementById('chatContainer');
 const emptyState = document.getElementById('emptyState');
 const messageInput = document.getElementById('messageInput');
@@ -88,7 +88,7 @@ async function sendMessage() {
     addThinking();
 
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(`${API_URL}?withModel=${model}`, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
             body: text
@@ -101,7 +101,7 @@ async function sendMessage() {
         }
 
         const reply = await response.text();
-        addMessage(reply, 'claude');
+        addMessage(reply, model);
 
     } catch (err) {
         removeThinking();

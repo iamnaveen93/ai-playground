@@ -1,23 +1,32 @@
 package com.naveen.aiplayground.controller;
 
-import com.naveen.aiplayground.service.AIClient;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.naveen.aiplayground.service.AIModelClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api/v1/1.0/ai-model-interaction")
 public class AIRestController {
 
-    private final AIClient anthropicClient;
+    private final Logger LOGGER = LoggerFactory.getLogger(AIRestController.class);
 
-    public AIRestController(@Qualifier("anthropicAIClientImpl") AIClient anthropicClient) {
-        this.anthropicClient = anthropicClient;
+    private final Map<String , AIModelClient> aiModelClientMap;
+
+    public AIRestController(Map<String, AIModelClient> aiModelClientMap) {
+        this.aiModelClientMap = aiModelClientMap;
     }
 
+    @PostMapping
+    public ResponseEntity<Optional<String>> askModel(
+            @RequestParam(defaultValue = "claude") String withModel,
+            @RequestBody String message) {
 
-    @PostMapping(path = "/ask-claude")
-    public ResponseEntity<String> askClaude(@RequestBody String message) {
-        return ResponseEntity.ok().body(anthropicClient.askClient(message));
+        LOGGER.info("Connecting Model :{}", withModel);
+        return ResponseEntity.ok().body(aiModelClientMap.get(withModel).askClient(message));
     }
 }
