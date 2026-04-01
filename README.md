@@ -182,8 +182,8 @@ public class OpenAIClientBuilder {
 
     private final OpenAIClient openAIClient;
 
-    public OpenAIClientBuilder(OpenAIClient openAIClient) {
-        this.openAIClient = openAIClient;
+    public OpenAIClientBuilder(@Value("${OPENAI_API_KEY}") String apiKey) {
+        this.openAiClient = OpenAIOkHttpClient.builder().apiKey(apiKey).build();
     }
 
     public String askOpenAIModel(String message) {
