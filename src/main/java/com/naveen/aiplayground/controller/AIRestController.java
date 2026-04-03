@@ -27,6 +27,6 @@ public class AIRestController {
             @RequestBody String message) {
 
         LOGGER.info("Connecting Model :{}", withModel);
-        return ResponseEntity.ok().body(aiModelClientMap.get(withModel).askClient(message));
+        return ResponseEntity.ok().body(aiModelClientMap.get(withModel).sendMessage(message));
     }
 }
