@@ -27,4 +27,6 @@ public class AnthropicAIClientBuilder {
         Message message1 = anthropicClient.messages().create(messageCreateParams);
         return message1.content().getFirst().asText().text();
     }
+
+    
 }
