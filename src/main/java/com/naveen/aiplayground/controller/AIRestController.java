@@ -25,7 +25,7 @@ public class AIRestController {
     public ResponseEntity<Optional<String>> askModel(
             @RequestParam(defaultValue = "claude") String withModel,
             @RequestBody String message) {
-        LOGGER.info("Connecting Model :{}", withModel);
+        LOGGER.info("Connecting model :{}", withModel);
         return ResponseEntity.ok().body(aiModelClientMap.get(withModel).sendMessage(message));
     }
 }
