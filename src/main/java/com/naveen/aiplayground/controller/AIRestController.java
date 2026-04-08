@@ -15,7 +15,7 @@ public class AIRestController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(AIRestController.class);
 
-    private final Map<String , AIModelClient> xyzaiModelClientMap;
+    private final Map<String , AIModelClient> ABCaiModelClientMap;
 
     public AIRestController(Map<String, AIModelClient> aiModelClientMap) {
         this.aiModelClientMap = aiModelClientMap;
