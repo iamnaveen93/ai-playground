@@ -10,6 +10,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 
 @Component
+    @slf4j
 public class AnthropicAIClientBuilder {
 
     private final AnthropicClient anthropicClient;
@@ -19,6 +20,7 @@ public class AnthropicAIClientBuilder {
     }
 
     public final String askClaudeModel(final String message) {
+        log.info("message":message);
         MessageCreateParams messageCreateParams = MessageCreateParams.builder()
                 .model(Model.CLAUDE_SONNET_4_6)
                 .maxTokens(1024L)
