@@ -20,7 +20,7 @@ public class AnthropicAIClientBuilder {
     }
 
     public final String askClaudeModel(final String message) {
-        log.info("message":message);
+        log.info("message :{} ":message);
         MessageCreateParams messageCreateParams = MessageCreateParams.builder()
                 .model(Model.CLAUDE_SONNET_4_6)
                 .maxTokens(1024L)
