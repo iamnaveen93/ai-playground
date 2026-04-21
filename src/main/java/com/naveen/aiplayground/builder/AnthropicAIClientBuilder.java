@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
     @slf4j
+    @Service
 public class AnthropicAIClientBuilder {
 
     private final AnthropicClient anthropicClient;
