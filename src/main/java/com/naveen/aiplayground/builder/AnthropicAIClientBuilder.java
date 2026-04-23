@@ -10,6 +10,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 
 @Component
+    @SLF4J
     @Service
 public class AnthropicAIClientBuilder {
 
