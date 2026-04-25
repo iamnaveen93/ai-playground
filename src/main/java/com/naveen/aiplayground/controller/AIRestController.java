@@ -27,6 +27,6 @@ public class AIRestController {
             @RequestParam(defaultValue = "claude") String withLLMModel,
             @RequestBody String message) {
         LOGGER.info("Connecting model :{}", withLLMModel);
-        return ResponseEntity.ok().body(aiModelClientMap.get(withModel).sendMessage(message));
+        return ResponseEntity.ok().body(aiModelClientMap.get(withLLMModel).sendMessage(message));
     }
 }
