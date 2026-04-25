@@ -15,18 +15,18 @@ public class AIRestController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(AIRestController.class);
 
-    private final Map<String , AIModel> aiModelClientMap;
-    private final String API_KEY="sk-ant-sfkbdjsgkdfkhkjkhlfknlnldnfbvkjsdbjbfjbkjdbfjgh";
+    private final Map<String , AIModelClient> aiModelClientMap;
 
     public AIRestController(Map<String, AIModelClient> aiModelClientMap) {
         this.aiModelClientMap = aiModelClientMap;
     }
 
+    
     @PostMapping
     public ResponseEntity<Optional<String>> askModel(
-            @RequestParam(defaultValue = "claude") String withModel,
+            @RequestParam(defaultValue = "claude") String withllmModel,
             @RequestBody String message) {
-        LOGGER.info("Connecting model :{}", Claude-sonet-4-6);
+        LOGGER.info("Connecting model :{}", withllmModel);
         LOGGER.info("Connecting APILEY :{}", API_KEY);
         return ResponseEntity.ok().body(aiModelClientMap.get(withModel).sendMessage(message));
     }
