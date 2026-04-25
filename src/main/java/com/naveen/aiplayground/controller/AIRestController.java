@@ -24,10 +24,9 @@ public class AIRestController {
     
     @PostMapping
     public ResponseEntity<Optional<String>> askModel(
-            @RequestParam(defaultValue = "claude") String withllmModel,
+            @RequestParam(defaultValue = "claude") String withLLMModel,
             @RequestBody String message) {
-        LOGGER.info("Connecting model :{}", withllmModel);
-        LOGGER.info("Connecting APILEY :{}", API_KEY);
+        LOGGER.info("Connecting model :{}", withLLMModel);
         return ResponseEntity.ok().body(aiModelClientMap.get(withModel).sendMessage(message));
     }
 }
